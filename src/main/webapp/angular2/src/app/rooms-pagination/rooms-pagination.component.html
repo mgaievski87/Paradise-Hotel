@@ -1,0 +1,17 @@
+
+    <ul class="pagination">
+      <li [ngClass]="{'unclickable': page.first}" class="pagination_item">
+        <a href="#searchResult-section" class="pagination_item_link" (click)="fetchPreviousPage()">&laquo;</a>
+      </li>
+
+      <li *ngFor="let pageIndex of pagesIndexes" [ngClass]="{'unclickable': pageIndex == page.number+1 }" class="pagination_item">
+        <a href="#searchResult-section" class="pagination_item_link" [ngClass]="{'pagination_item_link-active': pageIndex == page.number+1 }" (click)="fetchPageNumber(pageIndex)" >{{pageIndex}}</a>
+      </li>
+
+      <li [ngClass]="{'unclickable': page.last}" class="pagination_item">
+        <a href="#searchResult-section" class="pagination_item_link" (click)="fetchNextPage()">&raquo;</a>
+      </li>
+    </ul>
+
+
+

@@ -1,0 +1,41 @@
+* {
+  font-size: 16px; }
+
+#search-container {
+  display: none; }
+
+@media (min-width: 769px) {
+  #search-container_form {
+    display: inline-block; }
+
+  #search-container {
+    display: inline-block;
+    float: right; }
+
+  #search-container button {
+    float: right;
+    padding: 0.3rem 0.6rem;
+    margin-top: 1rem;
+    margin-right: 1rem;
+    background: #ddd;
+    font-size: 1.7rem;
+    border: none;
+    cursor: pointer; }
+
+  #search-container button:hover {
+    background: #ccc; }
+
+  #search-container input:focus {
+    width: 20rem; }
+
+  #searchInput {
+    padding: 0.3rem 0.3rem;
+    margin-top: 1rem;
+    font-size: 1.7rem;
+    border: none;
+    width: 2rem; } }
+@media (min-width: 1023px) {
+  #searchInput {
+    width: 12rem; } }
+
+/*# sourceMappingURL=search.component.css.map */

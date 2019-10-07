@@ -1,0 +1,96 @@
+/* Position the image container (needed to position the left and right arrows) */
+.gallery-container {
+  position: relative;
+  background-color: #222;;
+}
+.currentSlide {
+  max-width: 450px;
+  margin: 0 auto;
+}
+.currentSlide_img {
+  max-width: 100%;
+}
+
+/* Add a pointer when hovering over the thumbnail images */
+.cursor {
+  cursor: pointer;
+}
+
+/* Next & previous buttons */
+.prev,
+.next {
+  cursor: pointer;
+  text-decoration: none;
+  position: absolute;
+  top: 40%;
+  width: auto;
+  padding: 16px;
+  margin-top: -50px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover,
+.next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  font-size: 30px;
+}
+
+/* Number text (1/3 etc) */
+.currentSlide_text {
+  color: #f2f2f2;
+  font-size: 1em;
+  padding: 1ex 1em;
+  position: absolute;
+  top: 0;
+}
+
+/* Container for image text */
+.caption-container {
+  text-align: center;
+  background-color: #222;
+  font: 1.5em Arial;
+  padding-top: 1ex;
+  padding-bottom: 0;
+  color: white;
+}
+.gallery-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+.gallery-row:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* Five columns side by side */
+.smallImg-container {
+  padding: 0 1em;
+  flex-basis: calc(100%/5);
+
+}
+
+/* Add a transparency effect for thumnbail images */
+.demo {
+  opacity: 0.5;
+  width: 100%;
+}
+
+.active,
+.demo:hover {
+  opacity: 1;
+}

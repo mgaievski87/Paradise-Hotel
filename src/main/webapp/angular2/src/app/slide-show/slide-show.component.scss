@@ -1,0 +1,31 @@
+.slide-show_image-container {
+  width: 100%;
+}
+.slide-show_image-container img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1s;
+  animation-name: fade;
+  animation-duration: 1s;
+}
+
+@-webkit-keyframes fade {
+  0% {opacity: 0.1;}
+  25% {opacity: 0.5;}
+  50% {opacity: 1;}
+  75% {opacity: 0.5;}
+  100% {opacity: 0.1;}
+}
+
+@keyframes fade {
+  0% {opacity: 0.1;}
+  25% {opacity: 0.5;}
+  50% {opacity: 1;}
+  75% {opacity: 0.5;}
+  100% {opacity: 0.1;}
+}

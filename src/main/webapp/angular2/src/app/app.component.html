@@ -1,0 +1,381 @@
+<header id="header-part">
+  <nav class="navbar navbar-fixed-top">
+    <div class="navbar-inverse">
+      <div id="navbar_container" class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <button id="navbar-reserveBtn" type="button" class="btn btn-lg btn-primary" (click)="toggleBookingSection()">
+            Reserve
+          </button>
+          <a id="paradise-logo" class="navbar-brand" href="#">Paradise Hotel</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar_link" href="#">Home</a></li>
+            <li class="dropdown">
+              <a href="#" class="navbar_link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Services</a>
+              <ul class="dropdown-menu">
+                <li class="dropdown-menu_item"><a class="navbar_link" id="dropdown-menu_item_link" href="#generalInfo-section">General Information</a></li>
+                <li class="dropdown-menu_item"><a class="navbar_link" href="#dining-section">Dining</a></li>
+                <li class="dropdown-menu_item"><a class="navbar_link" href="#specialEvents-section">Special Events</a></li>
+              </ul>
+            </li>
+            <li><a class="navbar_link" href="#gallary-section">Gallery</a></li>
+            <li class="dropdown">
+              <a href="#" class="navbar_link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contact Us</a>
+              <ul class="dropdown-menu">
+                <li class="dropdown-menu_item"><a class="navbar_link" href="#location-section">Location</a></li>
+                <li class="dropdown-menu_item"><a class="navbar_link" href="#enquireNow-section">Enquire Now</a></li>
+              </ul>
+            </li>
+          </ul>
+          <app-search></app-search>
+        </div>
+      </div>
+    </div>
+    <section *ngIf="showBookingSection" id="booking-section">
+      <article class="container">
+        <div class="row" *ngIf="searchResultMessage">
+          <h5 class="bookingResultMessage">{{searchResultMessage}}</h5>
+        </div>
+        <form class="form-horizontal" [formGroup]="roomsearch" #searchRoomsForm="ngForm"
+              (ngSubmit)="searchRooms(currentPageNumber, currentPageSize, currentSort)">
+          <div class="form-group">
+            <div class="col-sm-2"></div>
+            <label for="checkin" class="col-sm-1 booking-form-label">Check-In:</label>
+            <div class="col-sm-3">
+              <input id="checkin" type="date" name="checkinDate" [ngModel]="checkinDate | date: 'yyyy-MM-dd'" class="form-control" formControlName="checkin" />
+            </div>
+            <label for="checkout" class="col-sm-1 booking-form-label">Check-Out:</label>
+            <div class="col-sm-3">
+              <input id="checkout" type="date" name="checkoutDate" [ngModel]="checkoutDate | date: 'yyyy-MM-dd'" class="form-control" formControlName="checkout" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-2"></div>
+            <label for="showParam" class="col-sm-1 booking-form-label">Show: </label>
+            <div class="col-sm-2">
+              <select id="showParam" class="form-control" formControlName="showParam">
+                <option value="availableOnly">Available</option>
+                <option value="all">All</option>
+              </select>
+            </div>
+            <label for="sortByParam" class="col-sm-1 booking-form-label">Sort by: </label>
+            <div class="col-sm-2">
+              <select id="sortByParam" class="form-control" formControlName="sortBy">
+                <option value="price,asc">Price (low)</option>
+                <option value="price,desc">Price (high)</option>
+                <option value="roomNumber,asc">Room # (low)</option>
+                <option value="roomNumber,desc">Room # (high)</option>
+                <option value="roomType,asc">Category (low)</option>
+                <option value="roomType,desc">Category (high)</option>
+              </select>
+            </div>
+            <label for="roomsPerPageParam" class="booking-form-label">rooms per page: </label>
+            <div class="col-sm-1">
+              <select id="roomsPerPageParam" class="form-control" formControlName="pageSize">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div id="booking-form-SearchBtn-container">
+              <button type="submit" id="booking-form-SearchBtn" class="btn btn-primary form-control" [disabled]="searchRoomsForm.invalid">Search</button>
+            </div>
+          </div>
+        </form>
+      </article>
+    </section><!-- booking-section -->
+  </nav>
+</header>
+<main id="main-part">
+  <!-- Showing loading spinner *ngIf="showSpinner" -->
+  <div class="spinnerContainer" *ngIf="showSpinner">
+      <div class="sk-fading-circle">
+        <div class="sk-circle1 sk-circle"></div>
+        <div class="sk-circle2 sk-circle"></div>
+        <div class="sk-circle3 sk-circle"></div>
+        <div class="sk-circle4 sk-circle"></div>
+        <div class="sk-circle5 sk-circle"></div>
+        <div class="sk-circle6 sk-circle"></div>
+        <div class="sk-circle7 sk-circle"></div>
+        <div class="sk-circle8 sk-circle"></div>
+        <div class="sk-circle9 sk-circle"></div>
+        <div class="sk-circle10 sk-circle"></div>
+        <div class="sk-circle11 sk-circle"></div>
+        <div class="sk-circle12 sk-circle"></div>
+      </div>
+  </div>
+  <div id="wallpapers">
+    <app-slide-show></app-slide-show>
+  </div>
+
+  <section id="searchResult-section" class="main_section" *ngIf="roomsPage">
+    <h1 class="section-header">Rooms</h1>
+    <ul id="room_list">
+      <li *ngFor="let room of roomsPage.content">
+        <div class="room-row">
+          <div class="room-row_item">
+            <div class="room-row_item_content" [ngClass]="{'room_thumb_container-bookedOut': !room.available}">
+              <img [ngClass]="{'room_thumb_img-bookedOut': !room.available}" src="{{room.imgURL}}" alt="Intro Gallery Room Sample Pictures">
+              <h3 *ngIf="!room.available" [ngClass]="{'room_thumb_text-bookedOut': !room.available}">Booked Out</h3>
+            </div>
+          </div>
+          <div class="room-row_item">
+            <strong>Room #: {{room.roomNumber}}</strong><br />
+          </div>
+          <div class="room-row_item">
+            <strong>Type: {{room.roomType}}</strong><br />
+          </div>
+          <div class="room-row_item">
+            <strong>Description: {{room.description}}</strong><br />
+          </div>
+          <div class="room-row_item">
+            <strong>Price: ${{room.price}}</strong>
+          </div>
+          <div class="room-row_item">
+            <button type="submit" class="btn btn-primary" *ngIf="room.available && !isInBuffer(room.id) && room.id!==currentRoomId" (click)="setCurrentRoomId(room.id)">Reserve</button>
+          </div>
+        </div>
+        <div *ngIf="showReservationForm(room.id)">
+          <!--Beginning -- Reservation_client-details_form -->
+          <form class="container" id="reservation-form" [formGroup]="roomReserve" #reservationForm="ngForm" (ngSubmit)="reserveRoom(room.id)">
+            <div [hidden]="reservationForm.submitted">
+              <div class="form-row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for = "clientFirstName">First name:</label>
+                    <input type="text" class="form-control" id="clientFirstName" formControlName="clientFirstName" placeholder="First name" required />
+                    <div *ngIf="clientFirstName !== undefined && clientFirstName.invalid && (clientFirstName.dirty || clientFirstName.touched)" class="alert alert-danger">
+                      <div *ngIf="clientFirstName !== undefined && clientFirstName.errors.required">First name is required.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for = "clientLastName">Last name:</label>
+                    <input type="text" class="form-control" id="clientLastName" formControlName="clientLastName" placeholder="Last name" required />
+                    <div *ngIf="clientLastName !== undefined && clientLastName.invalid && (clientLastName.dirty || clientLastName.touched)" class="alert alert-danger">
+                      <div *ngIf="clientLastName !== undefined && clientLastName.errors.required">Last name is required.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for = "clientEmail">Email:</label>
+                    <input type="email" class="form-control" id="clientEmail" formControlName="clientEmail" placeholder="Email" required />
+                    <div *ngIf="clientEmail !== undefined && clientEmail.invalid && (clientEmail.dirty || clientEmail.touched)" class="alert alert-danger">
+                      <div *ngIf="clientEmail !== undefined && clientEmail.errors.required">Valid email is required.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for = "clientPhone">Phone:</label>
+                    <input type="tel" class="form-control" id="clientPhone" formControlName="clientPhone" placeholder="Phone" required />
+                    <div *ngIf="clientPhone !== undefined && clientPhone.invalid && (clientPhone.dirty || clientPhone.touched)" class="alert alert-danger">
+                      <div *ngIf="clientPhone !== undefined && clientPhone.errors.required">Phone is required.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-sm-offset-3 col-sm-6">
+                  <div class="buttons-container">
+                    <button type="reset" class="btn btn-primary mb-2" (click)="resetReservationForm()">Go back</button>
+                    <button type="submit" class="btn btn-primary mb-2" [disabled]="reservationForm.invalid">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div *ngIf="reservationForm.submitted">
+            <h2 class="bookingResultMessage" >{{bookingResultMessage}}</h2>
+          </div>
+        <!--END -- Reservation_client-details_form -->
+        </div>
+      </li>
+    </ul>
+
+      <!-- Inserting Pagination component 'rooms-pagination.component' -->
+      <div *ngIf="self">
+        <app-rooms-pagination [table]="self" [page]="roomsPage"></app-rooms-pagination>
+      </div>
+    <!--END-- Inserting Pagination component 'rooms-pagination.component' -->
+  </section>
+
+  <section class="main_section" id="generalInfo-section">
+    <h1 class="section-header">General Information</h1>
+    <article id="generalinfo" class="row">
+      <section class="col-sm-4" id="arrivalinfo">
+        <h2 class="section_subheader">Arrival Information</h2>
+        <ul id="arrivalInfo_list">
+          <li><strong>Check-in:</strong> 3:00 PM</li>
+          <li><strong>Check-out:</strong> 11:00 AM</li>
+          <li><strong>Parking:</strong> Self-parking in the underground garage is $10 per day.
+          </li>
+          <li><strong>Airport Shuttle:</strong> Our complimentary airport shuttles leave every hour on the hour, and
+            make trips to Gavryshivka airport.
+          </li>
+          <li><strong>Trains:</strong> The nearest train station is at Independance Square.</li>
+          <li><strong>Pet Policy:</strong> Pets of all sizes and types are allowed in designated pet rooms, and the
+            specified common areas. Service animals are allowed everywhere.
+          </li>
+        </ul>
+      </section>
+      <section class="col-sm-4" id="services">
+        <h2 class="section_subheader">Services and Amenities</h2>
+          <p>Our services and amenities are designed to make your travel easy, your stay comfortable, and your experience
+            one-of-a-kind.</p>
+          <ul class="generalInfo_list">
+            <li>Indoor pool</li>
+            <li>24-hour fitness center</li>
+            <li>Massage therapy</li>
+            <li>Full service spa</li>
+            <li>In-room jacuzzi tubs</li>
+            <li>Rooftop café &amp; smoothie bar</li>
+            <li>Coffee bar &amp; pastry shop</li>
+            <li>Traditional continental breakfast</li>
+            <li>24-hour concierge service</li>
+            <li>Business center</li>
+            <li>Complimentary wireless service</li>
+            <li>Laundry &amp; dry cleaning service</li>
+            <li>Daily paper</li>
+            <li>Certified "green" hotel</li>
+            <li>Pet-friendly rooms &amp; common areas</li>
+          </ul>
+      </section>
+      <section class="col-sm-4" id="accessibility">
+        <h2 class="section_subheader">Accessibility</h2>
+        <p>We're committed to maintaining the same quality of service for every individual. We offer the following
+          facilities for those with special needs:</p>
+        <ul class="generalInfo_list">
+          <li>Grab bars on tub walls</li>
+          <li>Shower chairs</li>
+          <li>Hand held shower sprayers</li>
+          <li>Higher toilets &amp; toilet modifiers</li>
+          <li>Lower sink faucet handles</li>
+          <li>Wheelchair clearance under sinks &amp; vanity</li>
+          <li>Lower racks in closet</li>
+          <li>TDD machines</li>
+          <li>Telephone light signalers &amp; smoke alarms</li>
+          <li>Telephone amplification handsets</li>
+          <li>Closed captioned television converters</li>
+          <li>Vibrating alarm clocks</li>
+          <li>Telephones with volume control</li>
+        </ul>
+      </section>
+    </article>
+    <article id="greenprogram" class="standOutContainer">
+      <h2 class="section_subheader">Green Program</h2>
+      <p><strong>The Paradise Hotel - Vinnytsia</strong> was recently renovated, and we considered the impact on the earth
+        the entire way. From green building materials, to solar power, to energy-friendly lighting and appliances
+        throughout the hotel - we’re saving energy in every socket, outlet, and switch. We’ve also initiated a recycling
+        and composting program that reduces the load to local landfills, while providing valuable raw material for use
+        in new products, or in the case of compost, for use in local gardens and landscapes.</p>
+    </article>
+  </section><!-- hotelinfo -->
+
+  <section class="main_section" id="dining-section">
+    <h1 class="section-header">Dining</h1>
+    <p id="diningDescription">Vinnytsia is a foodie’s paradise, and the Paradise Hotel is in the center of it all. With options for
+      traditional English, Italian, Indian, American, Chinese, and French cuisines, all within two blocks of the
+      hotel, and a variety of tasty culinary delights from many other countries, within a half-mile radius, the only
+      trouble you’ll have is choosing! </p>
+
+    <article class="row" id="inhotel">
+      <section class="col-sm-4" id="rooftopcafe">
+        <h2 class="section_subheader">Rooftop Café</h2>
+        <img class="main_section_img" src="src/app/images/dining_rooftop.jpg" alt="Dining">
+        <p>Rooftop Café is the destination for five star dining. Our master chefs are trained to meet special
+          dietary needs, and we offer a range of vegetarian/vegan, kosher, gluten, and dairy free selections to
+          accommodate our guests. Whether you’re in the mood for our award winning roast beef, fresh select salads,
+          appetizing lunch entrees, or delectable desserts, we have you covered.</p>
+      </section>
+
+      <section class="col-sm-4" id="smoothiebar">
+        <h2 class="section_subheader">Smoothie Bar</h2>
+        <img class="main_section_img" src="src/app/images/dining_smoothiebar.jpg" alt="Dining">
+        <p>The Rooftop Smoothie Bar gives you panoramic views of the city, where you can have one of our specialty
+          smoothies while you wait for your table. Our top mixologists are constantly bringing new and unique offerings
+          to our smoothie menu. We have a wide range of locally grown, fresh fruit and vegetable choices to make you
+          custom blended drinks. We also have seasonal selections that you won’t find anywhere else.</p>
+      </section>
+
+      <section class="col-sm-4" id="coffeebar">
+        <h2 class="section_subheader">Breakfast &amp; Coffee Bar</h2>
+        <img class="main_section_img" src="src/app/images/dining_lattes.jpg" alt="Dining">
+        <p>Our traditional breakfast and coffee bar, located adjacent to our lounge, are the perfect way to start your
+          morning. We offer a wide selection of seasonal fresh fruit, a variety of cereals, croissants, crusty sourdough
+          bread, cook-to-order eggs and omelettes, fresh juice, coffee, and teas. Breakfast is served from 7:00 am to
+          10:00 am daily. Our coffee bar is open until 6:30 pm daily.</p>
+      </section>
+    </article><!-- inhotel -->
+    <article id="roomservice">
+      <h2 class="section_subheader">Room Service</h2>
+      <p>If you’d rather stay in your room and enjoy a quiet evening in, or a relaxing breakfast in bed, room service
+        options are available for all of our dining choices.</p>
+    </article>
+  </section><!-- dining -->
+
+  <section class="main_section" id="specialEvents-section">
+    <h1 class="section-header">Special Events</h1>
+  </section>
+
+  <section class="main_section" id="gallary-section">
+    <h1 class="section-header">Gallary</h1>
+    <app-gallary></app-gallary>
+  </section>
+  <section class="main_section" id="location-section">
+    <h1 class="section-header">Location</h1>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-8">
+          <app-map></app-map>
+        </div>
+        <div class="col-sm-4" id="info-container">
+          <div class="info-group">
+            <img class="info-group_icon-thumb" src="./src/app/images/icons/LocationIcon.png" alt="Address" title="Address" />
+            <div class="info-group_item">Vinnytsia, Ukraine</div>
+          </div>
+          <div class="info-group">
+            <a class="mail-link" href="mailto:hello@gmail.com?Subject=Request" style="color:#222;" target="_top">
+              <img class="info-group_icon-thumb" src="./src/app/images/icons/MailIcon.png" alt="Address" title="Address" />
+              <div class="info-group_item">mgaievski87@gmail.com</div>
+            </a>
+          </div>
+          <div class="info-group">
+            <img class="info-group_icon-thumb" src="./src/app/images/icons/PhoneIcon.png" alt="Address" title="Address" />
+            <div class="info-group_item">+38(099)123-45-67</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+  <section class="main_section" id="enquireNow-section">
+    <h1 class="section-header">Enquire Now</h1>
+    <app-enquire-form></app-enquire-form>
+  </section>
+
+</main>
+<footer id="footer-part">
+      <ul class="socialmedia-group">
+        <li class="socialmedia-group_item"><a href="https://twitter.com/"><img class="socialmedia-group_icon" src="src/app/images/twitter.png"
+                                                alt="icon for twitter"></a></li>
+        <li class="socialmedia-group_item"><a href="http://www.facebook.com/"><img class="socialmedia-group_icon" src="src/app/images/facebook.png"
+                                                    alt="icon for facebook"></a></li>
+        <li class="socialmedia-group_item"><a href="http://www.youtube.com/"><img class="socialmedia-group_icon" src="src/app/images/youtube.png" alt="icon for youtube"></a>
+        </li>
+      </ul>
+</footer>
+

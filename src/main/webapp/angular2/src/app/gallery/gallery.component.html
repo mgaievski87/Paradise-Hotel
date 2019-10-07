@@ -1,0 +1,20 @@
+<div class="gallery-container">
+  <div class="currentSlide">
+    <div class="currentSlide_text">{{currentImg.index}} / {{imgLargeArr.length}}</div>
+    <img class="currentSlide_img" src="{{currentImg.URL}}">
+  </div>
+
+  <a class="prev" (click)="showSlide(currentImg.index - 1)">❮</a>
+  <a class="next" (click)="showSlide(currentImg.index + 1)">❯</a>
+
+  <div class="caption-container">
+    <p id="currentSlide_caption">{{currentImg.caption}}</p>
+  </div>
+
+  <div class="gallery-row">
+    <div class="smallImg-container" *ngFor="let imgSmall of imgSmallArr">
+      <img class="demo cursor" [ngClass]="{'active': imgSmall.index === currentImg.index}" src="{{imgSmall.URL}}"  (click)="showSlide(imgSmall.index)" alt="The rooms">
+    </div>
+  </div>
+
+</div>
